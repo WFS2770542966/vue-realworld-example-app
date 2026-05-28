@@ -1,4 +1,4 @@
-name: Deploy Vue App to Production
+name: Deploy Vue RealWorld App
 on:
   push:
     branches:
@@ -11,24 +11,17 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
+      # 修复工作目录 + 用旧环境编译老项目（完美兼容node-sass）
+      - name: Build Vue project in Docker
+        uses: addnab/docker-run-action@v3
         with:
-          version: 10
-          run_install: false
+          image: node:10
+          options: --user root -v ${{ github.workspace }}:/app -w /app
+          run: |
+            npm install
+            npm run build
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          # cache: 'pnpm'  # 去掉缓存，避免找 lockfile
-
-      - name: Install dependencies
-        run: pnpm install --no-frozen-lockfile
-
-      - name: Build Vue project
-        run: pnpm build
-
+      # 部署到服务器（不变）
       - name: Set folder permission
         uses: appleboy/ssh-action@master
         with:
