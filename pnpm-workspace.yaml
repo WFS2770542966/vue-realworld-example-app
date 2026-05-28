@@ -1,0 +1,5 @@
+allowBuilds:
+  core-js: true
+  deasync: true
+  node-sass: true
+  yorkie: true

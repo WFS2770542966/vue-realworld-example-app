@@ -21,7 +21,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'pnpm'
+          # cache: 'pnpm'  # 去掉缓存，避免找 lockfile
 
       - name: Install dependencies
         run: pnpm install --no-frozen-lockfile
